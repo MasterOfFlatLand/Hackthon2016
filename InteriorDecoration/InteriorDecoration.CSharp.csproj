@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\FurnitureManager.cs" />
+    <Compile Include="Assets\Script\FurniturePlaceHint.cs" />
     <Compile Include="Assets\Script\PhotoRenderingManager.cs" />
     <Compile Include="Assets\Script\TargetToCamera.cs" />
     <Compile Include="Assets\SteamVR\Extras\SteamVR_GazeTracker.cs" />

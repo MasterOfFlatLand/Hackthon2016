@@ -34,21 +34,29 @@ public class PhotoRenderingManager : MonoBehaviour
         }
     }
 
+    delegate string SerializeVecFunc(Vector3 v);
+    SerializeVecFunc serializeVector = (Vector3 v) =>
+    {
+        return string.Format("{0} {1} {2}", v.x, v.y, v.z);
+    };
+
     IEnumerator RequestPhotoRendering(Camera cmr, GameObject[] funitureArray)
     {
         Debug.Log("send rendering request.");
 
         WWWForm form = new WWWForm();
-        string strCamer = "";
+
         Transform trans = cmr.transform;
-        strCamer = trans.position.x.ToString() + " " + trans.position.y.ToString() + " " + trans.position.z.ToString() + " "
-                   + trans.forward.x.ToString() + " " + trans.forward.y.ToString() + " " + trans.forward.z.ToString() + " "
-                   + trans.up.x.ToString() + " " + trans.up.y.ToString() + " " + trans.up.z.ToString();
+        string strCamer = serializeVector(trans.position) + " " +
+            serializeVector(trans.forward) + " " +
+            serializeVector(trans.up);
+
         form.AddField("camera", strCamer);
-        string strFunitures = "";
 
         if (null != funitureArray)
         {
+            string strFunitures = "";
+
             foreach (GameObject funiture in funitureArray)
             {
                 Matrix4x4 matrix = funiture.transform.localToWorldMatrix;
@@ -69,19 +77,4 @@ public class PhotoRenderingManager : MonoBehaviour
         yield return request;
         Debug.Log("return information from server: " + request.text);
     }
-
-    //IEnumerator RequestRendering(byte[] parameters)
-    //{
-    //    WWWForm form = new WWWForm();
-
-    //    // test only.
-    //    form.AddField("camera", "3.876106 -4.371810 7.572081 3.535682 -3.937974 6.737875 -0.499441 0.668262 0.551348");
-    //    form.AddField("models", "model_id0,[-0.016672079674900 0.000000001007456 0.000000000000000 0.000000000000000 -0.000000001007456 -0.006672079209238 0.000000000000000 0.000000000000000 0.000000000000000 0.000000000000000 0.068586871027946 0.000000000000000 0.836706995964050 1.845357656478882 -0.614888012409210 1.000000000000000];model_id1,[0.006672079674900 0.000000001007456 0.000000000000000 0.000000000000000 -0.000000001007456 -0.006672079209238 0.000000000000000 0.000000000000000 0.000000000000000 0.000000000000000 0.068586871027946 0.000000000000000 0.836706995964050 1.845357656478882 -0.614888012409210 1.000000000000000]");
-    //    serverUrl = "http://localhost/";
-    //    WWW request = new WWW(serverUrl, form);
-
-    //    yield return request;
-
-    //    Debug.Log("return information from server: " + request.text);
-    //}
 }

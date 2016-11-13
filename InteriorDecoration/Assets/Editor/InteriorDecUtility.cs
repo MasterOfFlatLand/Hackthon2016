@@ -48,33 +48,6 @@ public class InteriorDecUtility : MonoBehaviour {
             bc.center = bd.center;
             bc.size = bd.size;
         }
-
-//         MeshRenderer[] rendArray = go.GetComponentsInChildren<MeshRenderer>();
-//         if (null != rendArray)
-//         {
-//             Bounds rootBounds = rendArray[0].bounds;
-//             for (int i = 1; i < rendArray.Length; ++i)
-//             {
-//                 rootBounds.Encapsulate(rendArray[i].bounds);
-//             }
-// 
-//             BoxCollider bc = go.GetComponent<BoxCollider>();
-//             if (null == bc)
-//             {
-//                 bc = go.AddComponent<BoxCollider>();
-//             }
-// 
-//             // transform bounds into local space.
-//             Vector3 minPt = go.transform.worldToLocalMatrix.MultiplyPoint(rootBounds.min);
-//             Vector3 maxPt = go.transform.worldToLocalMatrix.MultiplyPoint(rootBounds.max);
-// 
-//             rootBounds.center = minPt;
-//             rootBounds.size = Vector3.zero;
-//             rootBounds.Encapsulate(maxPt);
-// 
-//             bc.center = rootBounds.center;
-//             bc.size = rootBounds.size;
-//         }
     }
 
     [MenuItem("VRUtility/RigidBody/Add to Children")]
@@ -122,6 +95,36 @@ public class InteriorDecUtility : MonoBehaviour {
 
                 interObj.isGrabbable = true;
                 interObj.precisionSnap = true;
+            }
+        }
+    }
+
+    [MenuItem("VRUtility/Interact/Add PlaceHint Script")]
+    static void AddPlaceHintToRootGO()
+    {
+        GameObject go = Selection.activeGameObject;
+        if (null != go)
+        {
+            for (int i=0; i<go.transform.childCount; ++i)
+            {
+                GameObject childGo = go.transform.GetChild(i).gameObject;
+
+                FurniturePlaceHint textHint = childGo.GetComponent<FurniturePlaceHint>();
+                if (null == textHint)
+                {
+                    textHint = childGo.AddComponent<FurniturePlaceHint>();
+                }
+
+                string tarName = childGo.name.Substring(1);
+                GameObject tarFurniture = GameObject.Find(tarName);
+                if (null != tarFurniture)
+                {
+                    textHint.targetFurniture = tarFurniture;
+                }
+                else
+                {
+                    Debug.LogError("target furniture not found: " + tarName);
+                }
             }
         }
     }
