@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Text;
+using VRTK;
 
 public class PhotoRenderingManager : MonoBehaviour
 {
@@ -20,18 +21,36 @@ public class PhotoRenderingManager : MonoBehaviour
                 funitureArray_[i] = funitureRoot.transform.GetChild(i).gameObject;
             }
         }
+
+        VRTK_ControllerEvents[] events = gameObject.GetComponentsInChildren<VRTK_ControllerEvents>(true);
+        if (null != events)
+        {
+            foreach (var ev in events)
+            {
+                ev.GripPressed += new ControllerInteractionEventHandler(OnGripPressed);
+            }
+        }
+        else
+        {
+            Debug.LogError("VRTK_ControllerEvents scripts not found.");
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            //StartCoroutine(RequestRendering(Encoding.ASCII.GetBytes(s)));
-            //GameObject[] players = GameObject.FindGameObjectsWithTag("player");
+//     // Update is called once per frame
+//     void Update()
+//     {
+//         if (Input.GetKeyDown(KeyCode.R))
+//         {
+//             //StartCoroutine(RequestRendering(Encoding.ASCII.GetBytes(s)));
+//             //GameObject[] players = GameObject.FindGameObjectsWithTag("player");
+// 
+//             StartCoroutine(RequestPhotoRendering(Camera.main, funitureArray_));
+//         }
+//     }
 
-            StartCoroutine(RequestPhotoRendering(Camera.main, funitureArray_));
-        }
+    private void OnGripPressed(object sender, ControllerInteractionEventArgs e)
+    {
+        StartCoroutine(RequestPhotoRendering(Camera.main, funitureArray_));
     }
 
     delegate string SerializeVecFunc(Vector3 v);

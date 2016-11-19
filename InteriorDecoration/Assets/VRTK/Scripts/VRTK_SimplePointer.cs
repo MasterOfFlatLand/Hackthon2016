@@ -27,6 +27,9 @@ namespace VRTK
         [Tooltip("The layers to ignore when raycasting.")]
         public LayerMask layersToIgnore = Physics.IgnoreRaycastLayer;
 
+        [HideInInspector]
+        public bool grabbingTarget = false;
+
         private GameObject pointerHolder;
         private GameObject pointer;
         private GameObject pointerTip;
@@ -38,6 +41,12 @@ namespace VRTK
         {
             base.OnEnable();
             InitPointer();
+
+            var pointerGrab = gameObject.GetComponent<LaserPointerGrab>();
+            if (null != pointerGrab)
+            {
+                pointerGrab.pointerTip = pointerTip;
+            }
         }
 
         protected override void OnDisable()
@@ -47,12 +56,18 @@ namespace VRTK
             {
                 Destroy(pointerHolder);
             }
+
+            var pointerGrab = gameObject.GetComponent<LaserPointerGrab>();
+            if (null != pointerGrab)
+            {
+                pointerGrab.pointerTip = null;
+            }
         }
 
         protected override void Update()
         {
             base.Update();
-            if (pointer.gameObject.activeSelf)
+            if (pointer.gameObject.activeSelf && !grabbingTarget)
             {
                 Ray pointerRaycast = new Ray(transform.position, transform.forward);
                 RaycastHit pointerCollidedWith;

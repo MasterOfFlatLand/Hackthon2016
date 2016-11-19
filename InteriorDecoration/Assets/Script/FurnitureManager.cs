@@ -2,11 +2,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using VRTK;
 
 // attach this script to Camera obj, and assign the furniture root object;
 public class FurnitureManager : MonoBehaviour {
     public GameObject furnitureRoot;
-    public KeyCode restartButton = KeyCode.R;
     public float fallingInterval = 5;
 
     private Vector3[] initialPosition;
@@ -23,15 +23,24 @@ public class FurnitureManager : MonoBehaviour {
         }
 
         RestartGame();
-	}
+
+        VRTK_ControllerEvents[] events = gameObject.GetComponentsInChildren<VRTK_ControllerEvents>(true);
+        if (null != events)
+        {
+            foreach (var ev in events)
+            {
+                ev.ApplicationMenuPressed += new ControllerInteractionEventHandler(RestartGameTriggered);
+            }
+        }
+        else
+        {
+            Debug.LogError("VRTK_ControllerEvents scripts not found.");
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {
-	    if (Input.GetKeyDown(restartButton))
-        {
-            RestartGame();
-        }
-        else if (fallingIndexArray.Count > 0 && (Time.time - startFallingTm >= fallingInterval))
+        if (fallingIndexArray.Count > 0 && (Time.time - startFallingTm >= fallingInterval))
         {
             int idx = rand.Next(fallingIndexArray.Count);
 
@@ -41,6 +50,13 @@ public class FurnitureManager : MonoBehaviour {
             startFallingTm = Time.time;
         }
 	}
+
+    private void RestartGameTriggered(object sender, ControllerInteractionEventArgs e)
+    {
+        RestartGame();
+        Debug.Log("restart game.");
+    }
+
 
     void RestartGame()
     {
