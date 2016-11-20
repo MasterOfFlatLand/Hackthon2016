@@ -40,11 +40,23 @@ public class FurnitureManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (fallingIndexArray.Count > 0 && (Time.time - startFallingTm >= fallingInterval))
+        if (Input.GetKeyDown(KeyCode.R))
         {
-            int idx = rand.Next(fallingIndexArray.Count);
+            RestartGame();
+        }
+        else if (fallingIndexArray.Count > 0 && (Time.time - startFallingTm >= fallingInterval))
+        {
+            //int idx = rand.Next(fallingIndexArray.Count);
+            int idx = 0;
 
-            furnitureRoot.transform.GetChild(fallingIndexArray[idx]).gameObject.SetActive(true);
+            GameObject tarGo = furnitureRoot.transform.GetChild(fallingIndexArray[idx]).gameObject;
+            Rigidbody rb = tarGo.GetComponent<Rigidbody>();
+            if (null != rb)
+            {
+                rb.isKinematic = false;
+            }
+            tarGo.SetActive(true);
+
             fallingIndexArray.RemoveAt(idx);
 
             startFallingTm = Time.time;
@@ -54,12 +66,12 @@ public class FurnitureManager : MonoBehaviour {
     private void RestartGameTriggered(object sender, ControllerInteractionEventArgs e)
     {
         RestartGame();
-        Debug.Log("restart game.");
     }
-
 
     void RestartGame()
     {
+        Debug.Log("restarting game...");
+
         fallingIndexArray.Clear();
 
         for (int i = 0; i < initialPosition.Length; ++i)
@@ -68,8 +80,9 @@ public class FurnitureManager : MonoBehaviour {
             Rigidbody rb = go.GetComponent<Rigidbody>();
             if (null != rb)
             {
-                rb.position = initialPosition[i];
+                rb.isKinematic = true;
             }
+            go.transform.position = initialPosition[i];
             go.SetActive(false);
 
             fallingIndexArray.Add(i);

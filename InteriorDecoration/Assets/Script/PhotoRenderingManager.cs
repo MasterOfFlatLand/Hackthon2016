@@ -27,7 +27,7 @@ public class PhotoRenderingManager : MonoBehaviour
         {
             foreach (var ev in events)
             {
-                ev.GripPressed += new ControllerInteractionEventHandler(OnGripPressed);
+                ev.GripPressed += new ControllerInteractionEventHandler(PhotoRenderingRequest);
             }
         }
         else
@@ -36,20 +36,21 @@ public class PhotoRenderingManager : MonoBehaviour
         }
     }
 
-//     // Update is called once per frame
-//     void Update()
-//     {
-//         if (Input.GetKeyDown(KeyCode.R))
-//         {
-//             //StartCoroutine(RequestRendering(Encoding.ASCII.GetBytes(s)));
-//             //GameObject[] players = GameObject.FindGameObjectsWithTag("player");
-// 
-//             StartCoroutine(RequestPhotoRendering(Camera.main, funitureArray_));
-//         }
-//     }
-
-    private void OnGripPressed(object sender, ControllerInteractionEventArgs e)
+    void Update()
     {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            RequestPhotoRendering();
+        }
+    }
+
+    private void PhotoRenderingRequest(object sender, ControllerInteractionEventArgs e)
+    {
+        RequestPhotoRendering();
+    }
+
+    private void RequestPhotoRendering()
+    {   
         StartCoroutine(RequestPhotoRendering(Camera.main, funitureArray_));
     }
 

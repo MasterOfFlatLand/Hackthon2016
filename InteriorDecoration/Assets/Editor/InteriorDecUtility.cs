@@ -2,7 +2,8 @@
 using UnityEditor;
 using NUnit.Framework;
 
-public class InteriorDecUtility : MonoBehaviour {
+public class InteriorDecUtility : MonoBehaviour
+{
 
     [MenuItem("VRUtility/Collider/Add BoxCollider")]
     static void AddBoxCollider()
@@ -20,7 +21,7 @@ public class InteriorDecUtility : MonoBehaviour {
         GameObject go = Selection.activeGameObject;
         if (null != go)
         {
-            for (int i=0; i<go.transform.childCount; ++i)
+            for (int i = 0; i < go.transform.childCount; ++i)
             {
                 Transform child = go.transform.GetChild(i);
                 AddBoxColliderToRootGO(child.gameObject);
@@ -34,7 +35,7 @@ public class InteriorDecUtility : MonoBehaviour {
         if (null != mfArray)
         {
             Bounds bd = mfArray[0].sharedMesh.bounds;
-            for (int i=1; i<mfArray.Length; ++i)
+            for (int i = 1; i < mfArray.Length; ++i)
             {
                 bd.Encapsulate(mfArray[i].sharedMesh.bounds);
             }
@@ -56,7 +57,7 @@ public class InteriorDecUtility : MonoBehaviour {
         GameObject go = Selection.activeGameObject;
         if (null != go)
         {
-            for (int i=0; i<go.transform.childCount; ++i)
+            for (int i = 0; i < go.transform.childCount; ++i)
             {
                 Transform child = go.transform.GetChild(i);
                 Rigidbody rb = child.gameObject.GetComponent<Rigidbody>();
@@ -84,7 +85,7 @@ public class InteriorDecUtility : MonoBehaviour {
         GameObject go = Selection.activeGameObject;
         if (null != go)
         {
-            for (int i=0; i<go.transform.childCount; ++i)
+            for (int i = 0; i < go.transform.childCount; ++i)
             {
                 GameObject childGo = go.transform.GetChild(i).gameObject;
                 VRTK.VRTK_InteractableObject interObj = childGo.GetComponent<VRTK.VRTK_InteractableObject>();
@@ -105,7 +106,7 @@ public class InteriorDecUtility : MonoBehaviour {
         GameObject go = Selection.activeGameObject;
         if (null != go)
         {
-            for (int i=0; i<go.transform.childCount; ++i)
+            for (int i = 0; i < go.transform.childCount; ++i)
             {
                 GameObject childGo = go.transform.GetChild(i).gameObject;
 
@@ -125,6 +126,35 @@ public class InteriorDecUtility : MonoBehaviour {
                 {
                     Debug.LogError("target furniture not found: " + tarName);
                 }
+            }
+        }
+    }
+
+    [MenuItem("VRUtility/Sound/Add Coin Sound to Root")]
+    static void AddCoinSound2Root()
+    {
+        GameObject go = Selection.activeGameObject;
+        if (null != go)
+        {
+            string clipPath = "Assets/Sound/Coin.wav";
+            AudioClip coin = AssetDatabase.LoadAssetAtPath<AudioClip>(clipPath);
+            if (null == coin)
+            {
+                Debug.LogError("clip at path not found: " + clipPath);
+                return;
+            }
+
+            for (int i = 0; i < go.transform.childCount; ++i)
+            {
+                GameObject child = go.transform.GetChild(i).gameObject;
+                AudioSource src = child.GetComponent<AudioSource>();
+                if (null == src)
+                {
+                    src = child.AddComponent<AudioSource>();
+                }
+
+                src.clip = coin;
+                src.playOnAwake = false;
             }
         }
     }

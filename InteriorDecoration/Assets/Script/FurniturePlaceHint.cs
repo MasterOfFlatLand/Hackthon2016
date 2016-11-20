@@ -4,7 +4,11 @@ using System.Collections;
 public class FurniturePlaceHint : MonoBehaviour {
     public GameObject targetFurniture;
 
+    public AudioClip rightSound;
+    public AudioClip wrongSound;
+
     private TextMesh hintText;
+    private AudioSource audioSrc;
 
 	// Use this for initialization
 	void Start () {
@@ -29,23 +33,37 @@ public class FurniturePlaceHint : MonoBehaviour {
             // reset hint text.
             ResetHint();
         }
-	}
+
+        // get audio source.
+        audioSrc = this.GetComponent<AudioSource>();
+        if (null == audioSrc)
+        {
+            audioSrc = gameObject.AddComponent<AudioSource>();
+        }
+    }
 	
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject == targetFurniture)
         {
             HideHint();
+            PlaySound(rightSound);
         }
         else
         {
             ErrorHint();
+            PlaySound(wrongSound);
         }
     }
 
     void OnTriggerExit(Collider other)
     {
         ResetHint();
+    }
+
+    void PlaySound(AudioClip clip)
+    {
+        audioSrc.PlayOneShot(clip);
     }
 
     void ResetHint()
