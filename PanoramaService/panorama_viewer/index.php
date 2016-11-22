@@ -63,9 +63,9 @@ function clocker() {
 			type: 'POST',
 			url : 'interval.php',
 			data: '',
-			success: function(data){
-			if (latest_img != data) {
-				window.location.reload();
+			success: function(data) {
+				if (latest_img != data) {
+					window.location.reload();
 			}
 		}
 	});
