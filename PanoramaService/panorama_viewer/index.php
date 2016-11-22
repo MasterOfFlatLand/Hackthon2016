@@ -59,10 +59,16 @@ body{ text-align: center; margin-top: 0px; margin-bottom: 0px; margin-left: 0px;
 <script>
 function clocker() {
 	var latest_img = $('.item').eq(0).attr("title");
-	//alert(latest_img);
-	if (/*need_reload == */false) {
-		window.location.reload();
-	}
+	$.ajax({
+			type: 'POST',
+			url : 'interval.php',
+			data: '',
+			success: function(data){
+			if (latest_img != data) {
+				window.location.reload();
+			}
+		}
+	});
 }
 </script>
 
