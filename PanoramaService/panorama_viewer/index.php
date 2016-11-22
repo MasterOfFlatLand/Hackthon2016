@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtm
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtm
 l1-transitional.dtd">
 <html lang="en">
 <head>
@@ -36,6 +36,8 @@ $url_prefix = 'http://' . get_server_ip() . '/panorama_viewer/viewer.php?img=';
 <style type="text/css">
 body{ text-align: center; margin-top: 0px; margin-bottom: 0px; margin-left: 0px; margin-right: 0px; padding: 0; }
 .parent{ text-align: center; width: 100%; height: 450px; }
+.left{ text-align: center; width: 40%; height: 450px;float:left; }
+.right{ text-align: center; width: 58%; height: 450px;float:left; }
 .item{ width: 256px; height: 256px; }
 </style>
 <body>
@@ -44,12 +46,19 @@ body{ text-align: center; margin-top: 0px; margin-bottom: 0px; margin-left: 0px;
 <script type="text/javascript" src="js/qrcode.js"></script>
 <script type="text/javascript" src="dist/skippr.js"></script>
 <br>
+<div>打开微信扫一扫即可访问 VR 全景图。</div>
+<br>
 <div class="parent">
-	<div>打开微信扫一扫即可访问 VR 全景图。</div>
-	<br>
-	<div class="parent" id="random">
+	<div class="left">
+		<?php echo "<div title='" . get_latest_img() . "' id='latest'></div>"; ?>
+		<br>
+		<div id='latest_txt'>
+			<?php echo "<b>" . pathinfo(get_latest_img(), PATHINFO_FILENAME) . "</b>" . " Time:" . get_img_time(get_latest_img()); ?>
+		</div>
+	</div>
+	<div class="right" id="random">
 		<?php
-			foreach (get_top_ten_imgs() as $image) {
+			foreach (get_top_imgs_except_first() as $image) {
 				echo "<div class='item' title='" . $image . "' id='" . pathinfo($image, PATHINFO_FILENAME) . "'></div>";
 			}
 		?>
@@ -58,7 +67,7 @@ body{ text-align: center; margin-top: 0px; margin-bottom: 0px; margin-left: 0px;
 
 <script>
 function clocker() {
-	var latest_img = $('.item').eq(0).attr("title");
+	var latest_img = $('#latest').attr("title");
 	$.ajax({
 			type: 'POST',
 			url : 'interval.php',
@@ -75,14 +84,15 @@ function clocker() {
 <?php
 echo "<script>";
 echo "$(document).ready(function() {";
-	foreach (get_top_ten_imgs() as $image) {
+	echo "jQuery('#latest').qrcode('" . $url_prefix . get_latest_img() . "');";
+	foreach (get_top_imgs_except_first() as $image) {
 		echo "jQuery('#" . pathinfo($image, PATHINFO_FILENAME) . "').qrcode('" . $url_prefix . $image . "');";
 	}
-	echo "var interval = self.setInterval('clocker()', 5000);";
+	echo "var interval = self.setInterval('clocker()', 10000);";
 	echo "$('#random').skippr({";
 		echo "transition: 'fade',";
 		echo "autoPlay: true,";
-		echo "autoPlayDuration: 3000,";
+		echo "autoPlayDuration: 5000,";
 		echo "easing:'easeInOutCubic',";
 		echo "logs: true";
 	echo "});";
