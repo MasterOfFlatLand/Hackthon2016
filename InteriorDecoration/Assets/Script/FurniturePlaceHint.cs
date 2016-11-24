@@ -4,6 +4,7 @@ using System.Collections;
 public class FurniturePlaceHint : MonoBehaviour {
     public GameObject targetFurniture;
 
+    private bool matched = false;
     private TextMesh hintText;
 
 	// Use this for initialization
@@ -36,8 +37,9 @@ public class FurniturePlaceHint : MonoBehaviour {
         if (other.gameObject == targetFurniture)
         {
             HideHint();
+            matched = true;
         }
-        else
+        else if (!matched)
         {
             ErrorHint();
         }
