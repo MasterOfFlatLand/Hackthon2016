@@ -53,8 +53,8 @@ public class FurnitureManager : MonoBehaviour {
         }
         else if (fallingIndexArray.Count > 0 && (Time.time - startFallingTm >= fallingInterval))
         {
-            //int idx = rand.Next(fallingIndexArray.Count);
-            int idx = 0;
+            int idx = rand.Next(fallingIndexArray.Count);
+            //int idx = 0;
 
             GameObject tarGo = furnitureRoot.transform.GetChild(fallingIndexArray[idx]).gameObject;
             Rigidbody rb = tarGo.GetComponent<Rigidbody>();
@@ -66,8 +66,7 @@ public class FurnitureManager : MonoBehaviour {
 
             fallingIndexArray.RemoveAt(idx);
 
-                startFallingTm = Time.time;
-            }
+            startFallingTm = Time.time;
         }
         else if (Time.time > gameOverTime && !isGameOver)
         {
