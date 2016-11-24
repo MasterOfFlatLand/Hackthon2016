@@ -8,11 +8,18 @@ using VRTK;
 public class FurnitureManager : MonoBehaviour {
     public GameObject furnitureRoot;
     public float fallingInterval = 5;
+    public float gameLength = 60;
+    public GameObject GameOverUI;
+    public GameObject GameOverSound;
+
+    private bool isGameOver;
 
     private Vector3[] initialPosition;
     private float startFallingTm;
     private List<int> fallingIndexArray = new List<int>();
     private System.Random rand;
+
+    private float gameOverTime;
 
 	// Use this for initialization
 	void Start () {
@@ -59,13 +66,38 @@ public class FurnitureManager : MonoBehaviour {
 
             fallingIndexArray.RemoveAt(idx);
 
-            startFallingTm = Time.time;
+                startFallingTm = Time.time;
+            }
+        }
+        else if (Time.time > gameOverTime && !isGameOver)
+        {
+            GameOver();
         }
 	}
+
+    public void UseMagic(float magicLength)
+    {
+        gameOverTime += magicLength;
+    }
 
     private void RestartGameTriggered(object sender, ControllerInteractionEventArgs e)
     {
         RestartGame();
+    }
+
+    void GameOver()
+    {
+        if (null != GameOverUI)
+        {
+            GameOverUI.SetActive(true);
+        }
+
+        if (null != GameOverSound)
+        {
+            AudioSource sound = GameOverSound.GetComponent<AudioSource>();
+            sound.Play();
+        }
+        isGameOver = true;
     }
 
     void RestartGame()
@@ -89,8 +121,15 @@ public class FurnitureManager : MonoBehaviour {
         }
 
         startFallingTm = Time.time - fallingInterval;
+        gameOverTime = startFallingTm + gameLength;
 
         // create new random generator.
         rand = new System.Random(Guid.NewGuid().GetHashCode());
+
+        if (null != GameOverUI)
+        {
+            GameOverUI.SetActive(false);
+        }
+        isGameOver = false;
     }
 }

@@ -4,6 +4,7 @@ using System.Collections;
 public class FurniturePlaceHint : MonoBehaviour {
     public GameObject targetFurniture;
 
+    private bool matched = false;
     public AudioClip rightSound;
     public AudioClip wrongSound;
 
@@ -48,8 +49,9 @@ public class FurniturePlaceHint : MonoBehaviour {
         {
             HideHint();
             PlaySound(rightSound);
+            matched = true;
         }
-        else
+        else if (!matched)
         {
             ErrorHint();
             PlaySound(wrongSound);
