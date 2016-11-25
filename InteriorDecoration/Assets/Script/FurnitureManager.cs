@@ -9,14 +9,17 @@ using VRTK;
 public class FurnitureManager : MonoBehaviour {
     public GameObject furnitureRoot;
     public GameObject placeHintRoot;
+    public GameObject roof;
 
     public AudioClip scoreSound;
     public AudioClip wrongSound;
     
     public float fallingInterval = 5;
-    public float gameLength = 60;
+    public float gameDuration = 60;
     public GameObject GameOverUI;
     public GameObject GameOverSound;
+
+    public Text scoreText;
 
     private bool isGameOver;
 
@@ -34,11 +37,19 @@ public class FurnitureManager : MonoBehaviour {
     public void AddScore(int score)
     {
         totalScore += score;
+        if (null != scoreText)
+        {
+            scoreText.text = "得分：" + totalScore;
+        }
     }
 
     public void SubtractScore(int score)
     {
         totalScore = Mathf.Max(0, totalScore - score);
+        if (null != scoreText)
+        {
+            scoreText.text = "得分：" + totalScore;
+        }
     }
 
 	// Use this for initialization
@@ -74,10 +85,24 @@ public class FurnitureManager : MonoBehaviour {
         {
             Debug.LogError("VRTK_ControllerEvents scripts not found.");
         }
+
+        // init time progressing.
+        GameObject bloodGo = GameObject.Find("BloodImage");
+        if (null != bloodGo)
+        {
+            ProgressTrigger trg = bloodGo.GetComponent<ProgressTrigger>();
+            trg.progressDuration = gameDuration;
+        }
     }
 	
 	// Update is called once per frame
 	void Update () {
+        if (fallingIndexArray.Count == 0 && roof.GetComponent<VRTK_InteractableObject>() == null)
+        {
+            roof.AddComponent<VRTK_InteractableObject>();
+            roof.GetComponent<BoxCollider>().enabled = true;
+        }
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             RestartGame();
@@ -185,7 +210,7 @@ public class FurnitureManager : MonoBehaviour {
         }
 
         startFallingTm = Time.time - fallingInterval;
-        gameOverTime = startFallingTm + gameLength;
+        gameOverTime = startFallingTm + gameDuration;
 
         // create new random generator.
         rand = new System.Random(Guid.NewGuid().GetHashCode());
@@ -216,6 +241,11 @@ public class FurnitureManager : MonoBehaviour {
         // reset photo rendering manager.
         PhotoRenderingManager photoRndMgr = gameObject.GetComponent<PhotoRenderingManager>();
         photoRndMgr.Reset();
+
+        // clear roof resources;
+        Destroy(roof.GetComponent<VRTK_InteractableObject>());
+        Destroy(roof.GetComponent<Rigidbody>());
+        roof.GetComponent<BoxCollider>().enabled = false;
 
         if (null != uiFadeoffCo)
         {

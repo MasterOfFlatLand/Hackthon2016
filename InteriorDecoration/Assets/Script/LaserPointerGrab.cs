@@ -29,7 +29,7 @@ public class LaserPointerGrab : MonoBehaviour {
         events.TriggerPressed += new ControllerInteractionEventHandler(DoTriggerPressed);
         events.TriggerReleased += new ControllerInteractionEventHandler(DoTriggerReleased);
 
-        events.TouchpadPressed += new ControllerInteractionEventHandler(TryUseMgic);
+        events.TouchpadPressed += new ControllerInteractionEventHandler(TryUseMagic);
 
         //magicApplier = this.GetComponent<MagicApply>();
     }
@@ -58,11 +58,20 @@ public class LaserPointerGrab : MonoBehaviour {
         }
     }
 
-    private void TryUseMgic(object sender, ControllerInteractionEventArgs e)
+    private void TryUseMagic(object sender, ControllerInteractionEventArgs e)
     {
-        if (targetGO != null && pointer.pointerTip && magicApplier)
+        // test if tar is imagepair.
+        if (null != targetGO)
         {
-            magicApplier.UseMagic(targetGO);
+            BasicPair pair = targetGO.GetComponent<BasicPair>();
+            if (null != pair)
+            {
+                pair.Replace();
+            }
+            else if (magicApplier)
+            {
+                magicApplier.UseMagic(targetGO);
+            }
         }
     }
 
@@ -82,7 +91,6 @@ public class LaserPointerGrab : MonoBehaviour {
 
     private void DoPointerIn(object sender, DestinationMarkerEventArgs e)
     {
-        //DebugLogger(e.controllerIndex, "POINTER IN", e.target, e.distance, e.destinationPosition);
         if (e.target.GetComponent<VRTK_InteractableObject>() != null)
         {
             targetGO = e.target.gameObject;
@@ -91,7 +99,6 @@ public class LaserPointerGrab : MonoBehaviour {
 
     private void DoPointerOut(object sender, DestinationMarkerEventArgs e)
     {
-        //DebugLogger(e.controllerIndex, "POINTER OUT", e.target, e.distance, e.destinationPosition);
         targetGO = null;
     }
 

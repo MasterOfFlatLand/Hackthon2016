@@ -3,7 +3,8 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class ProgressTrigger : MonoBehaviour {
-    public float loadingLength = 10;
+    [HideInInspector]
+    public float progressDuration = 10;
 
     private float startTime;
     private float progressLength;
@@ -19,7 +20,7 @@ public class ProgressTrigger : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         float deltaTime = Time.time - startTime;
-        float tarWidth = (1 - deltaTime / loadingLength) * progressLength;
+        float tarWidth = (1 - deltaTime / progressDuration) * progressLength;
 
         if (tarWidth <= 0)
         {

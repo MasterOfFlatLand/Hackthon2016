@@ -74,12 +74,16 @@
   <ItemGroup>
     <Compile Include="Assets\ProgressBar\Scripts\CiclularProgress.cs" />
     <Compile Include="Assets\ProgressBar\Scripts\GameObjectRotate.cs" />
+    <Compile Include="Assets\Script\BasicPair.cs" />
+    <Compile Include="Assets\Script\ColorPair.cs" />
     <Compile Include="Assets\Script\FurnitureManager.cs" />
     <Compile Include="Assets\Script\FurniturePlaceHint.cs" />
     <Compile Include="Assets\Script\FurnitureStyleManager.cs" />
     <Compile Include="Assets\Script\FurnitureStylePair.cs" />
+    <Compile Include="Assets\Script\ImagePair.cs" />
     <Compile Include="Assets\Script\LaserPointerGrab.cs" />
     <Compile Include="Assets\Script\MagicApply.cs" />
+    <Compile Include="Assets\Script\MaterialPair.cs" />
     <Compile Include="Assets\Script\PhotoRenderingManager.cs" />
     <Compile Include="Assets\Script\ProgressTrigger.cs" />
     <Compile Include="Assets\Script\TargetToCamera.cs" />
