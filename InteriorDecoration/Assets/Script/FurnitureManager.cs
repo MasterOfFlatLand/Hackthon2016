@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using System;
@@ -7,6 +8,11 @@ using VRTK;
 // attach this script to Camera obj, and assign the furniture root object;
 public class FurnitureManager : MonoBehaviour {
     public GameObject furnitureRoot;
+    public GameObject placeHintRoot;
+
+    public AudioClip scoreSound;
+    public AudioClip wrongSound;
+    
     public float fallingInterval = 5;
     public float gameLength = 60;
     public GameObject GameOverUI;
@@ -20,13 +26,29 @@ public class FurnitureManager : MonoBehaviour {
     private System.Random rand;
 
     private float gameOverTime;
+    private IEnumerator uiFadeoffCo;
+
+    private int totalScore = 0;
+
+    public void AddScore(int score)
+    {
+        totalScore += score;
+    }
 
 	// Use this for initialization
 	void Start () {
         initialPosition = new Vector3[furnitureRoot.transform.childCount];
         for (int i=0; i<initialPosition.Length; ++i)
         {
-            initialPosition[i] = furnitureRoot.transform.GetChild(i).position;
+            Transform childFurniture = furnitureRoot.transform.GetChild(i);
+            initialPosition[i] = childFurniture.position;
+        }
+
+        for (int i = 0; i < placeHintRoot.transform.childCount; ++i)
+        {
+            Transform child = placeHintRoot.transform.GetChild(i);
+            FurniturePlaceHint hint = child.GetComponent<FurniturePlaceHint>();
+            hint.furnitureMgr = this;
         }
 
         RestartGame();
@@ -88,7 +110,13 @@ public class FurnitureManager : MonoBehaviour {
     {
         if (null != GameOverUI)
         {
+            GameObject scoreTextGo = GameOverUI.transform.GetChild(2).gameObject;
+            Text scoreText = scoreTextGo.GetComponent<Text>();
+            scoreText.text = "您的分数是：<b>" + totalScore + "</b> !";
+
             GameOverUI.SetActive(true);
+            uiFadeoffCo = UIFadeoff(GameOverUI, 2);
+            StartCoroutine(uiFadeoffCo);
         }
 
         if (null != GameOverSound)
@@ -96,7 +124,27 @@ public class FurnitureManager : MonoBehaviour {
             AudioSource sound = GameOverSound.GetComponent<AudioSource>();
             sound.Play();
         }
+
+        // disable laser pointer.
+        VRTK_SimplePointer[] pointers = gameObject.GetComponentsInChildren<VRTK_SimplePointer>();
+        foreach (VRTK_SimplePointer pointer in pointers)
+        {
+            pointer.enabled = false;
+        }
+
+        LaserPointerGrab[] pointGrabs = gameObject.GetComponentsInChildren<LaserPointerGrab>();
+        foreach (LaserPointerGrab grab in pointGrabs)
+        {
+            grab.enabled = true;
+        }
+
         isGameOver = true;
+    }
+
+    IEnumerator UIFadeoff(GameObject uiObj, float elapsedSec)
+    {
+        yield return new WaitForSeconds(elapsedSec);
+        uiObj.SetActive(false);
     }
 
     void RestartGame()
@@ -124,6 +172,35 @@ public class FurnitureManager : MonoBehaviour {
 
         // create new random generator.
         rand = new System.Random(Guid.NewGuid().GetHashCode());
+
+        // reset score;
+        totalScore = 0;
+
+        // enable laser pointers.
+        VRTK_SimplePointer[] pointers = gameObject.GetComponentsInChildren<VRTK_SimplePointer>();
+        foreach (VRTK_SimplePointer pointer in pointers)
+        {
+            pointer.enabled = true;
+        }
+
+        LaserPointerGrab[] pointGrabs = gameObject.GetComponentsInChildren<LaserPointerGrab>();
+        foreach (LaserPointerGrab grab in pointGrabs)
+        {
+            grab.enabled = true;
+        }
+
+        // reset hint.
+        FurniturePlaceHint[] hintArray = placeHintRoot.GetComponentsInChildren<FurniturePlaceHint>();
+        foreach (FurniturePlaceHint hint in hintArray)
+        {
+            hint.ResetHint();
+        }
+
+        if (null != uiFadeoffCo)
+        {
+            StopCoroutine(uiFadeoffCo);
+            uiFadeoffCo = null;
+        }
 
         if (null != GameOverUI)
         {

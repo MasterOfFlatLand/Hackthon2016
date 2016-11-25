@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteriorDecoration.CSharp.Plugins", "InteriorDecoration.CSharp.Plugins.csproj", "{CC07D664-27F2-A97F-2F05-08CE3DE86FB0}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteriorDecoration.CSharp", "InteriorDecoration.CSharp.csproj", "{D7B9945E-46CD-8D6B-5836-6A4FCB6A23E4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InteriorDecoration.CSharp.Editor", "InteriorDecoration.CSharp.Editor.csproj", "{B03C5743-D4E8-A8AA-B99B-A638545A8961}"
@@ -11,6 +13,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CC07D664-27F2-A97F-2F05-08CE3DE86FB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC07D664-27F2-A97F-2F05-08CE3DE86FB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC07D664-27F2-A97F-2F05-08CE3DE86FB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC07D664-27F2-A97F-2F05-08CE3DE86FB0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D7B9945E-46CD-8D6B-5836-6A4FCB6A23E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D7B9945E-46CD-8D6B-5836-6A4FCB6A23E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D7B9945E-46CD-8D6B-5836-6A4FCB6A23E4}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -4,9 +4,7 @@ using VRTK;
 
 [RequireComponent(typeof(VRTK_InteractTouch)), RequireComponent(typeof(VRTK_ControllerEvents)), RequireComponent(typeof(VRTK_SimplePointer))]
 public class LaserPointerGrab : MonoBehaviour {
-
-    private GameObject pointerTip = null;
-
+    public Transform vrCamera;
     private GameObject targetGO = null;
 
     VRTK_SimplePointer pointer;
@@ -25,9 +23,6 @@ public class LaserPointerGrab : MonoBehaviour {
         pointer.DestinationMarkerExit += new DestinationMarkerEventHandler(DoPointerOut);
         pointer.DestinationMarkerSet += new DestinationMarkerEventHandler(DoPointerDestinationSet);
 
-        // assign pointer tip to grab.
-        pointerTip = pointer.pointerTip;
-
         var events = GetComponent<VRTK_ControllerEvents>();
         events.TriggerPressed += new ControllerInteractionEventHandler(DoTriggerPressed);
         events.TriggerReleased += new ControllerInteractionEventHandler(DoTriggerReleased);
@@ -43,8 +38,11 @@ public class LaserPointerGrab : MonoBehaviour {
     {
         if (targetGO != null)
         {
+            // lookAt laser.
+            RotateToCamera(targetGO.transform);
+
             FixedJoint joint = targetGO.AddComponent<FixedJoint>();
-            joint.connectedBody = pointerTip.GetComponent<Rigidbody>();
+            joint.connectedBody = pointer.pointerTip.GetComponent<Rigidbody>();
 
             pointer.grabbingTarget = true;
         }
@@ -80,4 +78,37 @@ public class LaserPointerGrab : MonoBehaviour {
         DebugLogger(e.controllerIndex, "POINTER DESTINATION", e.target, e.distance, e.destinationPosition);
     }
 
+    private void RotateToCamera(Transform tarTrans)
+    {
+        BoxCollider bc = tarTrans.GetComponent<BoxCollider>();
+        if (null == bc)
+        {
+            return;
+        }
+
+        Vector3 rotCenter = tarTrans.localToWorldMatrix.MultiplyPoint3x4(bc.center);
+
+        // rotate up.
+        float angle = Mathf.Acos(Vector3.Dot(tarTrans.up, Vector3.up)) * Mathf.Rad2Deg;
+        if (angle > Mathf.Epsilon)
+        {
+            Vector3 rotAxis = Vector3.Cross(tarTrans.up, Vector3.up);
+            tarTrans.RotateAround(rotCenter, rotAxis, angle);
+        }
+
+        // calc new rotate center.
+        rotCenter = tarTrans.localToWorldMatrix.MultiplyPoint3x4(bc.center);
+        Vector3 tarForward = vrCamera.position - rotCenter;
+        // target on XoZ plane.
+        tarForward.y = 0;
+        tarForward.Normalize();
+
+        // rotate to target.
+        angle = Mathf.Acos(Vector3.Dot(tarTrans.forward, tarForward)) * Mathf.Rad2Deg;
+        if (angle > Mathf.Epsilon)
+        {
+            Vector3 rotAxis = Vector3.Cross(tarTrans.forward, tarForward);
+            tarTrans.RotateAround(rotCenter, rotAxis, angle);
+        }
+    }
 }

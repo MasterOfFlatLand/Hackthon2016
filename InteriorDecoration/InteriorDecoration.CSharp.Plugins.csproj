@@ -5,16 +5,16 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{B03C5743-D4E8-A8AA-B99B-A638545A8961}</ProjectGuid>
+    <ProjectGuid>{CC07D664-27F2-A97F-2F05-08CE3DE86FB0}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
+    <AssemblyName>Assembly-CSharp-firstpass</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
     <CompilerResponseFile></CompilerResponseFile>
-    <UnityProjectType>Editor:5</UnityProjectType>
+    <UnityProjectType>GamePlugins:3</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows64:19</UnityBuildTarget>
     <UnityVersion>5.4.1f1</UnityVersion>
     <RootNamespace></RootNamespace>
@@ -52,67 +52,24 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor">
-      <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.Advertisements">
-      <HintPath>Library\UnityAssemblies\UnityEditor.Advertisements.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>Library\UnityAssemblies\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.EditorTestsRunner">
-      <HintPath>Library\UnityAssemblies\UnityEditor.EditorTestsRunner.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.UI">
-      <HintPath>Library\UnityAssemblies\UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEditor.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.TreeEditor">
-      <HintPath>Library\UnityAssemblies\UnityEditor.TreeEditor.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.Analytics">
       <HintPath>Library\UnityAssemblies\UnityEngine.Analytics.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.Graphs">
-      <HintPath>Library\UnityAssemblies\UnityEditor.Graphs.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.WindowsStandalone.Extensions">
-      <HintPath>Library\UnityAssemblies\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
-      <HintPath>Library\UnityAssemblies\SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
+    <Reference Include="UnityEditor">
+      <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="InteriorDecoration.CSharp.Plugins.csproj">
-      <Project>{CC07D664-27F2-A97F-2F05-08CE3DE86FB0}</Project>
-      <Name>InteriorDecoration.CSharp.Plugins</Name>
-    </ProjectReference>
-    <ProjectReference Include="InteriorDecoration.CSharp.csproj">
-      <Project>{D7B9945E-46CD-8D6B-5836-6A4FCB6A23E4}</Project>
-      <Name>InteriorDecoration.CSharp</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Assets\Editor\InteriorDecUtility.cs" />
-    <Compile Include="Assets\SteamVR\Editor\SteamVR_Editor.cs" />
-    <Compile Include="Assets\SteamVR\Editor\SteamVR_RenderModelEditor.cs" />
-    <Compile Include="Assets\SteamVR\Editor\SteamVR_Settings.cs" />
-    <Compile Include="Assets\SteamVR\Editor\SteamVR_SkyboxEditor.cs" />
-    <Compile Include="Assets\SteamVR\Editor\SteamVR_Update.cs" />
-    <Compile Include="Assets\VRTK\Editor\VRTK_AdaptiveQualityEditor.cs" />
-    <Compile Include="Assets\VRTK\Editor\VRTK_EditorUtilities.cs" />
-    <Compile Include="Assets\VRTK\Editor\VRTK_InteractableObjectEditor.cs" />
-    <Compile Include="Assets\VRTK\Scripts\Controls\2D\RadialMenu\Editor\RadialMenuInspector.cs" />
+    <Compile Include="Assets\Plugins\Pixelplacement\iTween\Sample\MoveSample.cs" />
+    <Compile Include="Assets\Plugins\Pixelplacement\iTween\Sample\RotateSample.cs" />
+    <Compile Include="Assets\Plugins\Pixelplacement\iTween\Sample\SampleInfo.cs" />
+    <Compile Include="Assets\Plugins\Pixelplacement\iTween\iTween.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Plugins\Pixelplacement\iTween\ReadMe!\ReadMe!.txt" />

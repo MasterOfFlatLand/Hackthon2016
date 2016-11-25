@@ -3,13 +3,15 @@ using System.Collections;
 
 public class FurniturePlaceHint : MonoBehaviour {
     public GameObject targetFurniture;
+    public int matchScore = 5;
 
     private bool matched = false;
-    public AudioClip rightSound;
-    public AudioClip wrongSound;
 
     private TextMesh hintText;
     private AudioSource audioSrc;
+
+    [HideInInspector]
+    public FurnitureManager furnitureMgr;
 
 	// Use this for initialization
 	void Start () {
@@ -48,19 +50,25 @@ public class FurniturePlaceHint : MonoBehaviour {
         if (other.gameObject == targetFurniture)
         {
             HideHint();
-            PlaySound(rightSound);
+            PlaySound(furnitureMgr.scoreSound);
+
+            furnitureMgr.AddScore(matchScore);
+
             matched = true;
         }
         else if (!matched)
         {
             ErrorHint();
-            PlaySound(wrongSound);
+            PlaySound(furnitureMgr.wrongSound);
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        ResetHint();
+        if (other.gameObject == targetFurniture)
+        {
+            ResetHint();
+        }
     }
 
     void PlaySound(AudioClip clip)
@@ -68,24 +76,33 @@ public class FurniturePlaceHint : MonoBehaviour {
         audioSrc.PlayOneShot(clip);
     }
 
-    void ResetHint()
+    public void ResetHint()
     {
-        hintText.color = Color.yellow;
-        hintText.fontStyle = FontStyle.Normal;
+        if (null != hintText)
+        {
+            hintText.color = Color.yellow;
+            hintText.fontStyle = FontStyle.Normal;
 
-        hintText.gameObject.SetActive(true);
+            hintText.gameObject.SetActive(true);
+        }
     }
 
     void ErrorHint()
     {
-        hintText.color = Color.red;
-        hintText.fontStyle = FontStyle.Bold;
+        if (null != hintText)
+        {
+            hintText.color = Color.red;
+            hintText.fontStyle = FontStyle.Bold;
 
-        hintText.gameObject.SetActive(true);
+            hintText.gameObject.SetActive(true);
+        }
     }
 
     void HideHint()
     {
-        hintText.gameObject.SetActive(false);
+        if (null != hintText)
+        {
+            hintText.gameObject.SetActive(false);
+        }
     }
 }
