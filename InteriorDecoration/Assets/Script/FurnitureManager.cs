@@ -21,6 +21,7 @@ public class FurnitureManager : MonoBehaviour {
     private bool isGameOver;
 
     private Vector3[] initialPosition;
+    private GameObject[] furnitureArray;
     private float startFallingTm;
     private List<int> fallingIndexArray = new List<int>();
     private System.Random rand;
@@ -35,13 +36,21 @@ public class FurnitureManager : MonoBehaviour {
         totalScore += score;
     }
 
+    public void SubtractScore(int score)
+    {
+        totalScore = Mathf.Max(0, totalScore - score);
+    }
+
 	// Use this for initialization
 	void Start () {
-        initialPosition = new Vector3[furnitureRoot.transform.childCount];
-        for (int i=0; i<initialPosition.Length; ++i)
+        int childCnt = furnitureRoot.transform.childCount;
+        furnitureArray = new GameObject[childCnt];
+        initialPosition = new Vector3[childCnt];
+        for (int i=0; i<childCnt; ++i)
         {
             Transform childFurniture = furnitureRoot.transform.GetChild(i);
             initialPosition[i] = childFurniture.position;
+            furnitureArray[i] = childFurniture.gameObject;
         }
 
         for (int i = 0; i < placeHintRoot.transform.childCount; ++i)
@@ -78,7 +87,7 @@ public class FurnitureManager : MonoBehaviour {
             int idx = rand.Next(fallingIndexArray.Count);
             //int idx = 0;
 
-            GameObject tarGo = furnitureRoot.transform.GetChild(fallingIndexArray[idx]).gameObject;
+            GameObject tarGo = furnitureArray[fallingIndexArray[idx]];
             Rigidbody rb = tarGo.GetComponent<Rigidbody>();
             if (null != rb)
             {
@@ -155,13 +164,21 @@ public class FurnitureManager : MonoBehaviour {
 
         for (int i = 0; i < initialPosition.Length; ++i)
         {
-            GameObject go = furnitureRoot.transform.GetChild(i).gameObject;
+            GameObject go = furnitureArray[i];
             Rigidbody rb = go.GetComponent<Rigidbody>();
             if (null != rb)
             {
                 rb.isKinematic = true;
             }
             go.transform.position = initialPosition[i];
+
+            // reset furniture pair.
+            FurnitureStylePair pair = go.GetComponent<FurnitureStylePair>();
+            if (null != pair)
+            {
+                pair.Reset();
+            }
+
             go.SetActive(false);
 
             fallingIndexArray.Add(i);
@@ -195,6 +212,10 @@ public class FurnitureManager : MonoBehaviour {
         {
             hint.ResetHint();
         }
+
+        // reset photo rendering manager.
+        PhotoRenderingManager photoRndMgr = gameObject.GetComponent<PhotoRenderingManager>();
+        photoRndMgr.Reset();
 
         if (null != uiFadeoffCo)
         {

@@ -2,7 +2,7 @@
 using UnityEngine.SceneManagement;
 using System.Collections;
 
-public class progressTrigger : MonoBehaviour {
+public class ProgressTrigger : MonoBehaviour {
     public float loadingLength = 10;
 
     private float startTime;
@@ -23,7 +23,7 @@ public class progressTrigger : MonoBehaviour {
 
         if (tarWidth <= 0)
         {
-            SceneManager.LoadScene("BigBang");
+            //SceneManager.LoadScene("BigBang");
         }
         else
         {

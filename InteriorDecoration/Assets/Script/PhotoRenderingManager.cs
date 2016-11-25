@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Text;
 using VRTK;
@@ -7,8 +8,14 @@ public class PhotoRenderingManager : MonoBehaviour
 {
     public string serverUrl;
     public GameObject funitureRoot;
+    public GameObject photoRndInfoUI;
+    public float uiVisibleDuration = 5;
 
     private GameObject[] funitureArray_;
+    private bool photoRndConfirmed = false;
+    private bool photoRndSent = false;
+
+    private IEnumerator uiCoroutine;
 
     // Use this for initialization
     void Start()
@@ -44,9 +51,64 @@ public class PhotoRenderingManager : MonoBehaviour
         }
     }
 
+    public void Reset()
+    {
+        if (null != uiCoroutine)
+        {
+            StopCoroutine(uiCoroutine);
+            uiCoroutine = null;
+        }
+
+        if (null != photoRndInfoUI)
+        {
+            photoRndInfoUI.SetActive(false);
+        }
+
+        photoRndConfirmed = false;
+        photoRndSent = false;
+    }
+
     private void PhotoRenderingRequest(object sender, ControllerInteractionEventArgs e)
     {
-        RequestPhotoRendering();
+        if (photoRndSent)
+        {
+            Text rndInfo = photoRndInfoUI.transform.GetChild(1).GetComponent<Text>();
+            rndInfo.text = "渲染请求已发送，请检查云渲染网站！";
+
+            ShowInfoUI();
+        }
+        else if (!photoRndConfirmed)
+        {
+            Text rndInfo = photoRndInfoUI.transform.GetChild(1).GetComponent<Text>();
+            rndInfo.text = "想要渲染当前场景？\n请再次按下“侧按钮”!";
+
+            ShowInfoUI();
+            photoRndConfirmed = true;
+        }
+        else
+        {
+            RequestPhotoRendering();
+            photoRndSent = true;
+        }
+    }
+
+    void ShowInfoUI()
+    {
+        if (null != uiCoroutine)
+        {
+            StopCoroutine(uiCoroutine);
+        }
+
+        uiCoroutine = ShowInfoUIRoutine(photoRndInfoUI, uiVisibleDuration);
+        StartCoroutine(uiCoroutine);
+    }
+
+    IEnumerator ShowInfoUIRoutine(GameObject uiObj, float duration)
+    {
+        uiObj.SetActive(true);
+        yield return new WaitForSeconds(duration);
+        uiObj.SetActive(false);
+        uiCoroutine = null;
     }
 
     private void RequestPhotoRendering()

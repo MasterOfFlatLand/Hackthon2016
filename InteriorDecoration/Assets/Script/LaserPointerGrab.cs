@@ -5,6 +5,8 @@ using VRTK;
 [RequireComponent(typeof(VRTK_InteractTouch)), RequireComponent(typeof(VRTK_ControllerEvents)), RequireComponent(typeof(VRTK_SimplePointer))]
 public class LaserPointerGrab : MonoBehaviour {
     public Transform vrCamera;
+    public MagicApply magicApplier;
+    
     private GameObject targetGO = null;
 
     VRTK_SimplePointer pointer;
@@ -26,6 +28,10 @@ public class LaserPointerGrab : MonoBehaviour {
         var events = GetComponent<VRTK_ControllerEvents>();
         events.TriggerPressed += new ControllerInteractionEventHandler(DoTriggerPressed);
         events.TriggerReleased += new ControllerInteractionEventHandler(DoTriggerReleased);
+
+        events.TouchpadPressed += new ControllerInteractionEventHandler(TryUseMgic);
+
+        //magicApplier = this.GetComponent<MagicApply>();
     }
 
     private void DebugLogger(uint index, string action, Transform target, float distance, Vector3 tipPosition)
@@ -36,8 +42,12 @@ public class LaserPointerGrab : MonoBehaviour {
 
     private void DoTriggerPressed(object sender, ControllerInteractionEventArgs e)
     {
-        if (targetGO != null)
+        if (targetGO != null && pointer.pointerTip)
         {
+            // disable collision detection for picked object.
+            Rigidbody rb = targetGO.GetComponent<Rigidbody>();
+            rb.detectCollisions = false;
+
             // lookAt laser.
             RotateToCamera(targetGO.transform);
 
@@ -48,11 +58,23 @@ public class LaserPointerGrab : MonoBehaviour {
         }
     }
 
+    private void TryUseMgic(object sender, ControllerInteractionEventArgs e)
+    {
+        if (targetGO != null && pointer.pointerTip && magicApplier)
+        {
+            magicApplier.UseMagic(targetGO);
+        }
+    }
+
     private void DoTriggerReleased(object sender, ControllerInteractionEventArgs e)
     {
         if (targetGO != null)
         {
             Destroy(targetGO.GetComponent<FixedJoint>());
+
+            // add collision detection.
+            Rigidbody rb = targetGO.GetComponent<Rigidbody>();
+            rb.detectCollisions = true;
 
             pointer.grabbingTarget = false;
         }

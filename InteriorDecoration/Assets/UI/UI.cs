@@ -20,9 +20,9 @@ public class UI : MonoBehaviour {
     private int nAngle = 10;
 	void Start () 
     {
-        StartCoroutine(BloodTimer());
-        StartCoroutine(GameObjectRotateTimer());
         InitGameObject();
+        StartCoroutine(BloodTimer());
+        StartCoroutine(GameObjectRotateTimer());  
         bIsSkillTriggered = false;
         nSkillNum = 5;
 	}
@@ -49,7 +49,6 @@ public class UI : MonoBehaviour {
             gameobject.transform.localRotation = Quaternion.Euler(nAngle, nAngle, nAngle);
         }
     }
-
     void OnGUI()
     {
         DrawLevelLabel();
@@ -74,7 +73,6 @@ public class UI : MonoBehaviour {
         //GUI.Label(new Rect(nLevelX, nTextY, nTextWidth, nTextHeight), "LEVEL " + level.ToString(), style);
         GUI.Label(new Rect(nScoreX, nTextY, nTextWidth, nTextHeight), "SCORE " + nFurFixedNum.ToString() + " / " + nFurTotalNum.ToString(), style);
     }
-
     void DrawNextLabel()
     {
         GUIStyle style = new GUIStyle();
@@ -84,7 +82,6 @@ public class UI : MonoBehaviour {
         int nNextX = Screen.width * 10 / 21;
         GUI.Label(new Rect(nNextX, nTextY, nTextWidth, nTextHeight), "NEXT", style);
     }
-
     void DrawSkillLabel()
     {
         GUIStyle style = new GUIStyle();
@@ -102,14 +99,13 @@ public class UI : MonoBehaviour {
             GUI.DrawTexture(new Rect(nX, nSkillY, nSkillWidth, nSkillHeight), imgSkill);
         }
     }
-
     void InitGameObject()
     {
         float fX = 1000f;
         float fY = 0.8f;
         Vector3 loc = new Vector3(fX, fY, 5);
         gameobject.transform.position = loc;
-        //gameobject.layer = 6;
+        gameobject.layer = 6;
         Vector3 objectSize = Vector3.Scale(gameobject.transform.localScale, gameobject.GetComponent<Renderer>().bounds.size);
         float nMax = Mathf.Max(Mathf.Max(objectSize.x, objectSize.y), objectSize.z);
         //float fScale = (Screen.height / 360000.0f) / nMax;
