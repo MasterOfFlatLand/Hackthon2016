@@ -66,11 +66,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\ProgressBar\Scripts\CiclularProgress.cs" />
+    <Compile Include="Assets\ProgressBar\Scripts\GameObjectRotate.cs" />
     <Compile Include="Assets\Script\FurnitureManager.cs" />
     <Compile Include="Assets\Script\FurniturePlaceHint.cs" />
     <Compile Include="Assets\Script\LaserPointerGrab.cs" />
     <Compile Include="Assets\Script\PhotoRenderingManager.cs" />
     <Compile Include="Assets\Script\TargetToCamera.cs" />
+    <Compile Include="Assets\Script\progressTrigger.cs" />
     <Compile Include="Assets\SteamVR\Extras\SteamVR_GazeTracker.cs" />
     <Compile Include="Assets\SteamVR\Extras\SteamVR_LaserPointer.cs" />
     <Compile Include="Assets\SteamVR\Extras\SteamVR_Teleporter.cs" />
@@ -106,6 +109,7 @@
     <Compile Include="Assets\SteamVR\Scripts\SteamVR_TrackedObject.cs" />
     <Compile Include="Assets\SteamVR\Scripts\SteamVR_UpdatePoses.cs" />
     <Compile Include="Assets\SteamVR\Scripts\SteamVR_Utils.cs" />
+    <Compile Include="Assets\UI\UI.cs" />
     <Compile Include="Assets\VRTK\Examples\Resources\Scripts\Add_HeadsetCollisionFade.cs" />
     <Compile Include="Assets\VRTK\Examples\Resources\Scripts\Archery\Arrow.cs" />
     <Compile Include="Assets\VRTK\Examples\Resources\Scripts\Archery\ArrowNotch.cs" />
@@ -222,6 +226,7 @@
     <Compile Include="Assets\VRTK\Scripts\VRTK_UIPointer.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\ProgressBar\Shaders\AlphaProgress.shader" />
     <None Include="Assets\SteamVR\Resources\SteamVR_AlphaOut.shader" />
     <None Include="Assets\SteamVR\Resources\SteamVR_ClearAll.shader" />
     <None Include="Assets\SteamVR\Resources\SteamVR_ColorOut.shader" />

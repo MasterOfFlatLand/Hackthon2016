@@ -111,6 +111,7 @@
     <Compile Include="Assets\VRTK\Scripts\Controls\2D\RadialMenu\Editor\RadialMenuInspector.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\ProgressBar\Shaders\AlphaProgress.shader" />
     <None Include="Assets\SteamVR\Resources\SteamVR_AlphaOut.shader" />
     <None Include="Assets\SteamVR\Resources\SteamVR_ClearAll.shader" />
     <None Include="Assets\SteamVR\Resources\SteamVR_ColorOut.shader" />
