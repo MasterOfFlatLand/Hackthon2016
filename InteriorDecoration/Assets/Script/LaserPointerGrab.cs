@@ -2,9 +2,10 @@
 using System.Collections;
 using VRTK;
 
+[RequireComponent(typeof(VRTK_InteractTouch)), RequireComponent(typeof(VRTK_ControllerEvents)), RequireComponent(typeof(VRTK_SimplePointer))]
 public class LaserPointerGrab : MonoBehaviour {
 
-    public GameObject pointerTip = null;
+    private GameObject pointerTip = null;
 
     private GameObject targetGO = null;
 
@@ -23,6 +24,9 @@ public class LaserPointerGrab : MonoBehaviour {
         pointer.DestinationMarkerEnter += new DestinationMarkerEventHandler(DoPointerIn);
         pointer.DestinationMarkerExit += new DestinationMarkerEventHandler(DoPointerOut);
         pointer.DestinationMarkerSet += new DestinationMarkerEventHandler(DoPointerDestinationSet);
+
+        // assign pointer tip to grab.
+        pointerTip = pointer.pointerTip;
 
         var events = GetComponent<VRTK_ControllerEvents>();
         events.TriggerPressed += new ControllerInteractionEventHandler(DoTriggerPressed);

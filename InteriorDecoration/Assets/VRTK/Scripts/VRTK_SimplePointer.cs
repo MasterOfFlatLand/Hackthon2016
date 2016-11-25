@@ -30,9 +30,11 @@ namespace VRTK
         [HideInInspector]
         public bool grabbingTarget = false;
 
+        [HideInInspector]
+        public GameObject pointerTip;
+
         private GameObject pointerHolder;
         private GameObject pointer;
-        private GameObject pointerTip;
         private Vector3 pointerTipScale = new Vector3(0.05f, 0.05f, 0.05f);
         // material of customPointerCursor (if defined)
         private Material customPointerMaterial;
@@ -41,12 +43,6 @@ namespace VRTK
         {
             base.OnEnable();
             InitPointer();
-
-            var pointerGrab = gameObject.GetComponent<LaserPointerGrab>();
-            if (null != pointerGrab)
-            {
-                pointerGrab.pointerTip = pointerTip;
-            }
         }
 
         protected override void OnDisable()
@@ -55,12 +51,6 @@ namespace VRTK
             if (pointerHolder != null)
             {
                 Destroy(pointerHolder);
-            }
-
-            var pointerGrab = gameObject.GetComponent<LaserPointerGrab>();
-            if (null != pointerGrab)
-            {
-                pointerGrab.pointerTip = null;
             }
         }
 
