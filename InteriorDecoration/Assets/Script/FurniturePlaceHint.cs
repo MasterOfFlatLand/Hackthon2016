@@ -68,6 +68,7 @@ public class FurniturePlaceHint : MonoBehaviour {
         if (other.gameObject == targetFurniture)
         {
             ResetHint();
+            furnitureMgr.SubtractScore(matchScore);
         }
     }
 
