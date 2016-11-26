@@ -1,2 +1,2 @@
 <?php include "inquiries.php";?>
-<?php echo print_latest_img();?>
+<?php echo print_latest_pic();?>

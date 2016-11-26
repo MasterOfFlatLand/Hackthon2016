@@ -2,6 +2,9 @@
 function get_imgs_dir() {
 	return "../panorama_imgs/";
 }
+function get_pics_dir() {
+	return "../panorama_pics/";
+}
 function get_top_imgs() {
 	$directory = get_imgs_dir();
 	$images = glob($directory . '*.{jpg,JPG,jpeg,JPEG,png,PNG}', GLOB_BRACE);
@@ -9,7 +12,7 @@ function get_top_imgs() {
 		return filemtime($a) < filemtime($b);
 	});
 	
-	$files = array();       
+	$files = array();
 	foreach ($images as $image) {
 		array_push($files, basename($image));
 	}
@@ -26,7 +29,17 @@ function get_top_imgs_except_first() {
 	$imgs = get_top_imgs();
 	return array_slice($imgs, 1);
 }
-function print_latest_img() {
-	echo get_latest_img();
+
+function get_latest_pic() {
+	$directory = get_pics_dir();
+	$images = glob($directory . '*.{jpg,JPG,jpeg,JPEG,png,PNG}', GLOB_BRACE);
+	usort($images, function($a, $b) {
+		return filemtime($a) < filemtime($b);
+	});
+	
+	return basename(reset($images));
+}
+function print_latest_pic() {
+	echo get_latest_pic();
 }
 ?>
