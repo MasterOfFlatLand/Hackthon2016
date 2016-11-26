@@ -11,18 +11,25 @@
 <?php
 function RenderTask()
 {
+	$curtime = time();
+	$target = "  \"string filename\" [\"C:/Apache24/htdocs/viewer/examples/custom-contextmenu/"."BigBang".$curtime."\"]";
+	$file = "B:/Temp/Target".$curtime.".lxt";
+	$h = fopen($file, "w");
+	fwrite($h, $target);
+	fclose($h);
+
 	$context = new ZMQContext(1);
 	// Socket to talk to clients
 	$socket = new ZMQSocket($context, ZMQ::SOCKET_REQ);
 	$socket->connect("tcp://localhost:5555");
-	$socket->send("Hello");
+	$socket->send("Hello|".$file);
 	$response = $socket->recv();
 	printf ("Received response: [%s]\n", $response);
 }
 
 function ProcessVector($oxyz, $ixyz)
 {
-	$oxyz[0] = $ixyz[0];
+	$oxyz[0] = -$ixyz[0];
 	$oxyz[1] = -$ixyz[2];
 	$oxyz[2] = $ixyz[1];
 }
@@ -149,6 +156,14 @@ $model0 = 'model_id0';
 $transform1 = '[0.006672079674900 0.000000001007456 0.000000000000000 0.000000000000000 -0.000000001007456 -0.006672079209238 0.000000000000000 0.000000000000000 0.000000000000000 0.000000000000000 0.068586871027946 0.000000000000000 0.836706995964050 1.845357656478882 -0.614888012409210 1.000000000000000]';
 $model1 = 'model_id1';
 $dmodel = $model0.','.$transform0.';'.$model1.','.$transform1;
+#$dlookat = '0 1.6 0 0 0 -1 0 1 0';
+#$dlookat = '-0.83 1.4 -1.8 0 0 -1 0 1 0'; //f
+#$dlookat = '-0.83 1.4 -1.8 0 0 1 0 1 0'; //b
+#$dlookat = '-0.83 1.4 -1.8 0 1 0 1 0 0'; //u
+#$dlookat = '-0.83 1.4 -1.8 0 -1 0 -1 0 0'; //d
+#$dlookat = '-0.83 1.4 -1.8 1 0 0 0 1 0'; //r
+$dlookat = '-0.83 1.4 -1.8 -1 0 0 0 1 0'; //l
+$dmodel = 'LongSofa,[1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1];ShortSofa,[1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1];Case,[1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1];Table,[1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1];KitchTable,[1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1];Desk,[1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1]';
 
 if(count($_REQUEST) > 0) {
 	$h = fopen("B:/params.log", "w");
@@ -169,6 +184,8 @@ if(count($_REQUEST) > 0) {
   </form>
   <p>
     <br />
+	<a href="/viewer/krpano.html?xml=examples/custom-contextmenu/contextmenu.xml">CubeMap</a>
+	<br />
 说明：<br /><br />
 相机LookAt(同OpenGL的gluLookAt) float*9:<br />
   float float float float float float float float<br /><br />
