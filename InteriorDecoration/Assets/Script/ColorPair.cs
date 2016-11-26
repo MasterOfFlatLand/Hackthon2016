@@ -12,12 +12,12 @@ public class ColorPair :  BasicPair {
         Reset();
     }
 
-	public void Replace()
+    public override void Replace()
     {
         targetMaterial.color = colorPair;
     }
 
-    public void Reset()
+    public override void Reset()
     {
         targetMaterial.color = originalColor;
     }

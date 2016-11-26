@@ -71,14 +71,7 @@ public class PhotoRenderingManager : MonoBehaviour
 
     private void PhotoRenderingRequest(object sender, ControllerInteractionEventArgs e)
     {
-        if (photoRndSent)
-        {
-            Text rndInfo = photoRndInfoUI.transform.GetChild(1).GetComponent<Text>();
-            rndInfo.text = "渲染请求已发送，请检查云渲染网站！";
-
-            ShowInfoUI();
-        }
-        else if (!photoRndConfirmed)
+        if (!photoRndConfirmed)
         {
             Text rndInfo = photoRndInfoUI.transform.GetChild(1).GetComponent<Text>();
             rndInfo.text = "想要渲染当前场景？\n请再次按下“侧按钮”!";
@@ -88,8 +81,16 @@ public class PhotoRenderingManager : MonoBehaviour
         }
         else
         {
-            RequestPhotoRendering();
-            photoRndSent = true;
+            if (!photoRndSent)
+            {
+                RequestPhotoRendering();
+                photoRndSent = true;
+            }
+
+            Text rndInfo = photoRndInfoUI.transform.GetChild(1).GetComponent<Text>();
+            rndInfo.text = "渲染请求已发送，请检查云展示网站！";
+
+            ShowInfoUI();
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using VRTK;
 
 public class FurniturePlaceHint : MonoBehaviour {
     public GameObject targetFurniture;
@@ -47,6 +48,12 @@ public class FurniturePlaceHint : MonoBehaviour {
 	
     void OnTriggerEnter(Collider other)
     {
+        // ignore pointers.
+        if (other.GetComponentInParent<VRTK_SimplePointer>() != null)
+        {
+            return;
+        }
+
         if (other.gameObject == targetFurniture)
         {
             HideHint();
@@ -65,10 +72,22 @@ public class FurniturePlaceHint : MonoBehaviour {
 
     void OnTriggerExit(Collider other)
     {
+        // ignore pointers.
+        if (other.GetComponentInParent<VRTK_SimplePointer>() != null)
+        {
+            return;
+        }
+
         if (other.gameObject == targetFurniture)
         {
             ResetHint();
             furnitureMgr.SubtractScore(matchScore);
+
+            matched = false;
+        }
+        else if (!matched)
+        {
+            ResetHint();
         }
     }
 

@@ -2,22 +2,25 @@
 using System.Collections;
 
 public class MaterialPair : BasicPair {
-    public Material sourceMaterial;
-    public Material destMaterial;
+    public Material[] materialPair;
 
+    int currentIndex;
     MeshRenderer mr;
 	// Use this for initialization
 	void Start () {
         mr = gameObject.GetComponent<MeshRenderer>();
+        mr.material = materialPair[0];
+        currentIndex = 0;
 	}
 	
-    public void Replace()
+    public override void Replace()
     {
-        mr.material = destMaterial;
+        mr.material = materialPair[(++currentIndex)%2];
     }
 
-    public void Reset()
+    public override void Reset()
     {
-        mr.material = sourceMaterial;
+        mr.material = materialPair[0];
+        currentIndex = 0;
     }
 }

@@ -21,6 +21,9 @@ public class FurnitureManager : MonoBehaviour {
 
     public Text scoreText;
 
+    public ProgressTrigger progTrigger;
+
+
     private bool isGameOver;
 
     private Vector3[] initialPosition;
@@ -34,18 +37,22 @@ public class FurnitureManager : MonoBehaviour {
 
     private int totalScore = 0;
 
+    private MagicApply magicApplier;
+
     public void AddScore(int score)
     {
-        totalScore += score;
-        if (null != scoreText)
-        {
-            scoreText.text = "得分：" + totalScore;
-        }
+        UpdateScore(totalScore + score);
     }
 
     public void SubtractScore(int score)
     {
-        totalScore = Mathf.Max(0, totalScore - score);
+
+        UpdateScore(Mathf.Max(0, totalScore - score));
+    }
+
+    void UpdateScore(int score)
+    {
+        totalScore = score;
         if (null != scoreText)
         {
             scoreText.text = "得分：" + totalScore;
@@ -71,6 +78,8 @@ public class FurnitureManager : MonoBehaviour {
             hint.furnitureMgr = this;
         }
 
+        magicApplier = this.GetComponent<MagicApply>();
+
         RestartGame();
 
         VRTK_ControllerEvents[] events = gameObject.GetComponentsInChildren<VRTK_ControllerEvents>(true);
@@ -85,19 +94,13 @@ public class FurnitureManager : MonoBehaviour {
         {
             Debug.LogError("VRTK_ControllerEvents scripts not found.");
         }
-
-        // init time progressing.
-        GameObject bloodGo = GameObject.Find("BloodImage");
-        if (null != bloodGo)
-        {
-            ProgressTrigger trg = bloodGo.GetComponent<ProgressTrigger>();
-            trg.progressDuration = gameDuration;
-        }
     }
 	
 	// Update is called once per frame
 	void Update () {
-        if (fallingIndexArray.Count == 0 && roof.GetComponent<VRTK_InteractableObject>() == null)
+        // trigger roof on complete.
+        if (fallingIndexArray.Count == 0 && (Time.time - startFallingTm >= fallingInterval) &&
+            roof.GetComponent<VRTK_InteractableObject>() == null)
         {
             roof.AddComponent<VRTK_InteractableObject>();
             roof.GetComponent<BoxCollider>().enabled = true;
@@ -110,7 +113,6 @@ public class FurnitureManager : MonoBehaviour {
         else if (fallingIndexArray.Count > 0 && (Time.time - startFallingTm >= fallingInterval))
         {
             int idx = rand.Next(fallingIndexArray.Count);
-            //int idx = 0;
 
             GameObject tarGo = furnitureArray[fallingIndexArray[idx]];
             Rigidbody rb = tarGo.GetComponent<Rigidbody>();
@@ -149,7 +151,7 @@ public class FurnitureManager : MonoBehaviour {
             scoreText.text = "您的分数是：<b>" + totalScore + "</b> !";
 
             GameOverUI.SetActive(true);
-            uiFadeoffCo = UIFadeoff(GameOverUI, 2);
+            uiFadeoffCo = UIFadeoff(GameOverUI, 5);
             StartCoroutine(uiFadeoffCo);
         }
 
@@ -193,6 +195,7 @@ public class FurnitureManager : MonoBehaviour {
             Rigidbody rb = go.GetComponent<Rigidbody>();
             if (null != rb)
             {
+                rb.velocity = Vector3.zero;
                 rb.isKinematic = true;
             }
             go.transform.position = initialPosition[i];
@@ -216,7 +219,7 @@ public class FurnitureManager : MonoBehaviour {
         rand = new System.Random(Guid.NewGuid().GetHashCode());
 
         // reset score;
-        totalScore = 0;
+        UpdateScore(0);
 
         // enable laser pointers.
         VRTK_SimplePointer[] pointers = gameObject.GetComponentsInChildren<VRTK_SimplePointer>();
@@ -246,6 +249,16 @@ public class FurnitureManager : MonoBehaviour {
         Destroy(roof.GetComponent<VRTK_InteractableObject>());
         Destroy(roof.GetComponent<Rigidbody>());
         roof.GetComponent<BoxCollider>().enabled = false;
+
+        // reset magic.
+        if (null != magicApplier)
+        {
+            magicApplier.Reset();
+        }
+
+        // reset progress bar.
+        progTrigger.progressDuration = gameDuration;
+        progTrigger.Reset();
 
         if (null != uiFadeoffCo)
         {

@@ -12,12 +12,12 @@ public class ImagePair : BasicPair {
         Reset();
     }
 
-    public void Replace()
+    public override void Replace()
     {
         targetMaterial.mainTexture = imagePair;
     }
 
-    public void Reset()
+    public override void Reset()
     {
         targetMaterial.mainTexture = origianlImage;
     }

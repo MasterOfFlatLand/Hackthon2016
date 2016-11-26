@@ -9,7 +9,7 @@ public class MagicApply : MonoBehaviour {
     private int magicCount;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         magicCount = magicRoot.transform.childCount;
         magicArray = new GameObject[magicCount];
         for (int i = 0; i < magicCount; ++i)

@@ -107,6 +107,22 @@ public class LaserPointerGrab : MonoBehaviour {
         DebugLogger(e.controllerIndex, "POINTER DESTINATION", e.target, e.distance, e.destinationPosition);
     }
 
+    void ApplyRotate(Transform tarTrans, Vector3 from, Vector3 to, Vector3 pivot)
+    {
+        //Debug.Log("acos(-1): " + Mathf.Acos(-1));
+        float dotVal = Mathf.Clamp(Vector3.Dot(from, to), -1, 1);
+        float angle = Mathf.Acos(dotVal) * Mathf.Rad2Deg;
+        if (angle > Mathf.Epsilon)
+        {
+            Vector3 rotAxis = Vector3.forward;
+            if (angle < 179.99f)
+            {
+                rotAxis = Vector3.Cross(from, to);
+            }
+            tarTrans.RotateAround(pivot, rotAxis, angle);
+        }
+    }
+
     private void RotateToCamera(Transform tarTrans)
     {
         BoxCollider bc = tarTrans.GetComponent<BoxCollider>();
@@ -118,12 +134,7 @@ public class LaserPointerGrab : MonoBehaviour {
         Vector3 rotCenter = tarTrans.localToWorldMatrix.MultiplyPoint3x4(bc.center);
 
         // rotate up.
-        float angle = Mathf.Acos(Vector3.Dot(tarTrans.up, Vector3.up)) * Mathf.Rad2Deg;
-        if (angle > Mathf.Epsilon)
-        {
-            Vector3 rotAxis = Vector3.Cross(tarTrans.up, Vector3.up);
-            tarTrans.RotateAround(rotCenter, rotAxis, angle);
-        }
+        ApplyRotate(tarTrans, tarTrans.up, Vector3.up, rotCenter);
 
         // calc new rotate center.
         rotCenter = tarTrans.localToWorldMatrix.MultiplyPoint3x4(bc.center);
@@ -133,11 +144,6 @@ public class LaserPointerGrab : MonoBehaviour {
         tarForward.Normalize();
 
         // rotate to target.
-        angle = Mathf.Acos(Vector3.Dot(tarTrans.forward, tarForward)) * Mathf.Rad2Deg;
-        if (angle > Mathf.Epsilon)
-        {
-            Vector3 rotAxis = Vector3.Cross(tarTrans.forward, tarForward);
-            tarTrans.RotateAround(rotCenter, rotAxis, angle);
-        }
+        ApplyRotate(tarTrans, tarTrans.forward, tarForward, rotCenter);
     }
 }

@@ -10,7 +10,7 @@ public class ProgressTrigger : MonoBehaviour {
     private float progressLength;
     private RectTransform trans;
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         startTime = Time.time;
 
         trans = transform as RectTransform;
@@ -31,4 +31,10 @@ public class ProgressTrigger : MonoBehaviour {
             trans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, tarWidth);
         }
 	}
+
+    public void Reset()
+    {
+        trans.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, progressLength);
+        startTime = Time.time;
+    }
 }
