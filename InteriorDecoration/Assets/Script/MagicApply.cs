@@ -53,6 +53,10 @@ public class MagicApply : MonoBehaviour {
 
         jiaMagic.transform.localPosition = srcFurniture.transform.localToWorldMatrix.MultiplyPoint3x4(bc.center);
         jiaMagic.SetActive(true);
+
+        AudioSource adSrc = jiaMagic.GetComponent<AudioSource>();
+        adSrc.Play();
+
         iTween.RotateBy(jiaMagic, iTween.Hash(
             "y", 1.0,
             "easetype", "easeInOutQuad",
